@@ -1,6 +1,6 @@
-# Distributed Identity Protocol
+# Distributed Identity Protocol (Work in Progress)
 
-| Authenticate and validate information even without direct connection to the provider
+| Authenticate and validate information even without direct connection to an authentication node
 
 Think of it as a secure and flexible authentication mechanism with cache for offline use.
 
