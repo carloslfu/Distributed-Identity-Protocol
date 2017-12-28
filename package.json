@@ -1,0 +1,29 @@
+{
+  "name": "distributed-identity-protocol",
+  "version": "0.0.1",
+  "description": "Secure and flexible authentication protocol with cache for offline use",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/carloslfu/Distributed-Identity-Protocol.git"
+  },
+  "author": "Carlos Galarza <carloslfu@gmail.com>",
+  "license": "MIT",
+  "files": [
+    "lib/",
+    "LICENSE"
+  ],
+  "homepage": "https://github.com/carloslfu/Distributed-Identity-Protocol#readme",
+  "dependencies": {
+    "json-stable-stringify": "^1.0.1",
+    "supercop.js": "^2.0.1",
+    "ts-crypto": "0.0.3"
+  },
+  "devDependencies": {
+    "@types/core-js": "^0.9.43",
+    "@types/node": "^8.5.2"
+  }
+}
