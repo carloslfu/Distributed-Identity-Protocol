@@ -1,6 +1,6 @@
 # Distributed Identity Protocol (Work in Progress)
 
-| Authenticate and validate information even without direct connection to an authentication node
+| Authenticate and validate information even without direct connection to an authentication node. AKA Descentralized authentication
 
 Think of it as a secure and flexible authentication mechanism with cache for offline use.
 
@@ -23,19 +23,23 @@ Artifacts:
 
 - Node (N)
   - id: Public key (Identity)
-  - pass: Hash of the user password
-  - sk: Secret key (Identity) encrypted with Hashed Password with primary hash alg
-  - d: Other data object
+  - pass: Primary hash of the password
+  - sk: Secret key (Identity) encrypted with secondary hashed Password
+  - ct: Creation timestamp (ms)
+  - ddt?: Due Date Timestamp (ms)
   - nsig: Node Signature with PK
+  - pid (optional): Parent Node id
   - psig (optional): Parent Node signature
 - Transferable Object (T)
   - id: Public key (Identity)
-  - pass: Hash of the user password using the secondary alg
-  - tpk: Transferable public key
-  - tsk: Transferable private key, encrypted with Secret key and pass
+  - pass: Hash of the user password using the primary alg
+  - pk: Transferable public key
+  - sk: Transferable private key, encrypted with Secret key and secondary hashed Password
   - nid: Node Id
-  - ddt: Due Date Timestamp
-  - d: Other data object
+  - ct: Creation timestamp (ms)
+  - ddt?: Due Date Timestamp (ms)
+  - pid (optional): Parent Node id
+  - tsig: Signature with Transferable PK
   - nsig: Signature with Node PK
 - Documents (Docs): Document that need authenticacion and validation
 - LogChain: A chain of logs that provides validation of a document, object or certain data. Used for validation of author, editions and integrity
@@ -44,8 +48,7 @@ Algorithms:
 
 - Signing algorithm: A public key algorithm used for key-pair generation
 - Password hash algorithm: Used for hashing user password when introduced by it
-- Primary hash algorithm: Used for hashing Node pass
-- Secondary hash algorithm: SHA512
+- Hash algorithm: Used for hashing Node pass
 
 Scenarios:
 
@@ -62,9 +65,8 @@ Scenarios:
 Is made using TypeScript, here are the design choices:
 
 - Signing algorithm: ED25519 using supercop.js
-- Password hash algorithm: MD5
-- Primary hash algorithm: SHA256 using built-in nodejs crypto, for browsers can be shimmed using crypto-browserify
-- Secondary hash algorithm: SHA512
+- Password primary hash algorithm: MD5 (recommended) -> SHA512
+- Password secondary hash algorithm: SHA256 using built-in nodejs crypto, for browsers can be shimmed using crypto-browserify
 
 Tasks:
 
