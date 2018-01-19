@@ -70,14 +70,8 @@ Is made using TypeScript, here are the design choices:
 
 Tasks:
 
-- Dev Environment
+- Update Docs
 - Test Environment
-- Integration Testing Environment
-- Implement Artifact Builders:
-    - Node Object
-    - User Object
-- Authentication mechanism
-- Artifacts Validation with LogChain
 
 ## Ideas
 
