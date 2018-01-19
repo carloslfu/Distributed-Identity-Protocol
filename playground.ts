@@ -4,8 +4,8 @@ import { hash } from 'ts-crypto'
 let parentPass = '123'
 let childPass = '111'
 
-let parent = createNode({ email: 'parent' }, parentPass)
-let child = createNode({ email: 'child' }, childPass, undefined, parent, hash('MD5', parentPass))
+let parent = createNode({ email: 'parent' }, hash('MD5', parentPass))
+let child = createNode({ email: 'child' }, hash('MD5', childPass), undefined, parent, hash('MD5', parentPass))
 
 let ddt = Date.now() + 5000 // So long life
 let tParent = createTransferable(parent, hash('MD5', parentPass), ddt)

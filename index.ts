@@ -28,9 +28,8 @@ export interface Transferable {
   [prop: string]: any
 }
 
-export const createNode = (data: any, pass: string, ddt?: number, parentNode?: Node, hashedParentPass?: string): Node => {
+export const createNode = (data: any, hashedPass: string, ddt?: number, parentNode?: Node, hashedParentPass?: string): Node => {
   let keys = ed.createKeyPair(ed.createSeed())
-  let hashedPass = hash('MD5', pass)
   let pk = keys.publicKey.toString('hex')
   let sk = keys.secretKey.toString('hex')
   let primaryHashedPass = hmac('SHA512', hashedPass, pk)
