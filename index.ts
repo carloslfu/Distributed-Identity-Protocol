@@ -30,8 +30,8 @@ export interface Transferable {
 
 export const createNode = (data: any, hashedPass: string, ddt?: number, parentNode?: Node, hashedParentPass?: string): Node => {
   let keys = ed.createKeyPair(ed.createSeed())
-  let pk = keys.publicKey.toString('hex')
-  let sk = keys.secretKey.toString('hex')
+  let pk = keys.publicKey.toString('base64')
+  let sk = keys.secretKey.toString('base64')
   let primaryHashedPass = hmac('SHA512', hashedPass, pk)
   let secondaryHashedPass = hmac('SHA256', hashedPass, pk)
   let node: any = {
@@ -50,12 +50,11 @@ export const createNode = (data: any, hashedPass: string, ddt?: number, parentNo
   } else if (parentNode && parentNode.hasOwnProperty('ddt')) {
     node.ddt = parentNode.ddt
   }
-  node.nsig = ed.sign(hex(stringify(node)), keys.publicKey, keys.secretKey).toString('hex')
+  node.nsig = ed.sign(buffer(stringify(node)), base64(keys.publicKey), base64(keys.secretKey)).toString('base64')
   if (parentNode) {
     let parentSK = decryptText(parentNode.sk, hmac('SHA256', hashedParentPass, parentNode.id))
-    let msg = hex(stringify(node))
     node.pid = parentNode.id
-    node.psig = ed.sign(msg, hex(parentNode.id), hex(parentSK)).toString('hex')
+    node.psig = ed.sign(buffer(stringify(node)), base64(parentNode.id), base64(parentSK)).toString('base64')
   }
   return node
 }
@@ -64,8 +63,8 @@ export const createTransferable = (node: Node, hashedPass: string, ddt?: number)
   let keys = ed.createKeyPair(ed.createSeed())
   let primaryHashedPass = hmac('SHA512', hashedPass, node.id)
   let secondaryHashedPass = hmac('SHA256', hashedPass, node.id)
-  let pk = keys.publicKey.toString('hex')
-  let sk = keys.secretKey.toString('hex')
+  let pk = keys.publicKey.toString('base64')
+  let sk = keys.secretKey.toString('base64')
   let psk = decryptText(node.sk, secondaryHashedPass)
   let trans: any = {
     ...node,
@@ -85,8 +84,8 @@ export const createTransferable = (node: Node, hashedPass: string, ddt?: number)
   } else if (node && node.hasOwnProperty('ddt')) {
     trans.ddt = node.ddt
   }
-  trans.tsig = ed.sign(hex(stringify(trans)), hex(pk), hex(sk)).toString('hex')
-  let nsig = ed.sign(hex(stringify(trans)), hex(node.id), hex(psk)).toString('hex')
+  trans.tsig = ed.sign(buffer(stringify(trans)), base64(pk), base64(sk)).toString('base64')
+  let nsig = ed.sign(buffer(stringify(trans)), base64(node.id), base64(psk)).toString('base64')
   trans.nsig = nsig
   return trans
 }
@@ -97,11 +96,11 @@ export const auth = (node: Node | Transferable, hashedPass: string): string => {
   if (primaryHashedPass !== node.pass) return ''
   let secondaryHashedPass = hmac('SHA256', hashedPass, node.id)
   try {
-    let valid = ed.verify(hex(node.nsig), hex(stringify(noSig(node))), hex(node.id))
+    let valid = ed.verify(base64(node.nsig), base64(stringify(noSig(node))), base64(node.id))
     if (!valid) return ''
     let psig = (node as any).psig
     if (psig) {
-      valid = ed.verify(hex(psig), hex(stringify(noPsig(node))), hex(node.pid))
+      valid = ed.verify(base64(psig), base64(stringify(noPsig(node))), base64(node.pid))
       if (!valid) return ''
     }
     let sk = decryptText(node.sk, secondaryHashedPass)
@@ -125,4 +124,5 @@ export const objNoKeys = (keys: string[], obj: any): any => {
   return res
 }
 
-export const hex = (str: string) => new Buffer(str, 'hex')
+export const buffer = (str: string) => Buffer.from(str, 'utf8')
+export const base64 = (str: string) => Buffer.from(str, 'base64')
