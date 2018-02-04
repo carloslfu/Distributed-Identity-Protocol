@@ -2,17 +2,26 @@ import * as ed from 'supercop.js'
 import * as stringify from 'json-stable-stringify'
 import { hash, encryptText, hmac, decryptText } from 'ts-crypto'
 
-// Definitions acording the protocol
+// Definitions acording to the protocol
 
 export interface Node {
+  /** Public Key */
   id: string
+  /** Primary hashed pass, udes for faster authentication denial */
   pass: string
+  /** Secret Key encrypted with secondary hashed pass */
   sk: string
+  /** Creation Timestamp in milliseconds */
   ct: number
+  /** Due Date Timestamp in milliseconds */
   ddt?: number
-  pid: string
+  /** Node Signature */
   nsig: string
+  /** Parent Node id */
+  pid?: string
+  /** Parent Signature */
   psig?: string
+  /** Data props */
   [prop: string]: any
 }
 

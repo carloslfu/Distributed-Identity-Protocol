@@ -12,6 +12,8 @@ We provide here both a documentation and a TypeScript implementation of the prot
 
 ## General Design
 
+(TODO: Update docs)
+
 This protocol is channel agnostic and encription algorithm agnostic but our Web implementation has 2 sets of algorithms we can use for 2 use cases.
 
 Actors:
