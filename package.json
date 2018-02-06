@@ -1,6 +1,6 @@
 {
   "name": "distributed-identity",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Secure and flexible authentication protocol with cache for offline use",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
