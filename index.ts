@@ -105,6 +105,19 @@ export const auth = (node: Node | Transferable, hashedPass: string): string => {
   if (primaryHashedPass !== node.pass) return ''
   let secondaryHashedPass = hmac('SHA256', hashedPass, node.id)
   try {
+    let sk = decryptText(node.sk, secondaryHashedPass)
+    return sk
+  } catch (err) {
+    return ''
+  }
+}
+
+export const verify = (node: Node | Transferable, hashedPass: string): string => {
+  if (node.hasOwnProperty('ddt') && (Date.now() > node.ddt)) return ''
+  let primaryHashedPass = hmac('SHA512', hashedPass, node.id)
+  if (primaryHashedPass !== node.pass) return ''
+  let secondaryHashedPass = hmac('SHA256', hashedPass, node.id)
+  try {
     let valid = ed.verify(base64(node.nsig), base64(stringify(noSig(node))), base64(node.id))
     if (!valid) return ''
     let psig = (node as any).psig

@@ -1,4 +1,4 @@
-import { createNode, createTransferable, auth } from './index'
+import { createNode, createTransferable, auth, verify } from './index'
 import { hash } from 'ts-crypto'
 
 let parentPass = '123'
@@ -22,6 +22,20 @@ console.log('Parent transferable secret key', res ? res : 'Failed', tParent.emai
 res = auth(child, hash('MD5', childPass))
 console.log('Child secret key', res ? res : 'Failed', child.email)
 
-// debugger
 res = auth(tChild, hash('MD5', childPass))
 console.log('Child transferable secret key', res ? res : 'Failed', tChild.email)
+
+// Verify
+
+res = verify(parent, hash('MD5', parentPass))
+console.log('Parent secret key', res ? res : 'Failed', parent.email)
+
+res = verify(tParent, hash('MD5', parentPass))
+console.log('Parent transferable secret key', res ? res : 'Failed', tParent.email)
+
+res = verify(child, hash('MD5', childPass))
+console.log('Child secret key', res ? res : 'Failed', child.email)
+
+res = verify(tChild, hash('MD5', childPass))
+console.log('Child transferable secret key', res ? res : 'Failed', tChild.email)
+
